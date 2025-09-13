@@ -3,348 +3,446 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hrishikesh Mishra - Creative Technologist</title>
+    <title>Hrishikesh Mishra - SDET</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --dark-bg: #0A0A0A;
+            --light-text: #E0E0E0;
+            --primary-accent: #6366F1; /* indigo-500 */
+            --secondary-accent: #EC4899; /* pink-500 */
+            --card-bg: rgba(23, 23, 23, 0.5);
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #000000;
-            color: #f0f0f0;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
             overflow-x: hidden;
-            margin: 0;
-            cursor: none; /* Hide default cursor */
+            cursor: none;
         }
         
-        .custom-cursor {
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--light-text);
+            border-radius: 50%;
             position: fixed;
-            top: 0;
-            left: 0;
             pointer-events: none;
             z-index: 9999;
-            transition: transform 0.2s ease-out;
-        }
-
-        #cursor-dot {
-            width: 8px;
-            height: 8px;
-            background-color: white;
-            border-radius: 50%;
-        }
-
-        #cursor-outline {
-            width: 40px;
-            height: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
+            mix-blend-mode: difference;
+            transition: transform 0.2s ease-out, width 0.2s ease-out, height 0.2s ease-out;
         }
         
-        body:hover .custom-cursor.hovered #cursor-outline {
-            transform: scale(1.5);
-            background-color: rgba(255, 255, 255, 0.1);
+        .cursor-grow {
+            transform: scale(3);
+            border: none;
+            background-color: var(--primary-accent);
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title {
+            @apply text-4xl md:text-5xl font-bold mb-12 text-center tracking-tighter;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            border-color: var(--primary-accent);
+        }
+
+        .tag {
+            @apply inline-block bg-gray-800 rounded-full px-4 py-1 text-sm font-semibold text-gray-300 mr-2 mb-2 transition-transform duration-200 hover:scale-110;
         }
         
-         body:hover .custom-cursor.hovered #cursor-dot {
-            transform: scale(0.5);
+        .btn {
+            @apply inline-block text-white font-bold py-3 px-8 rounded-full transition-all duration-300 relative z-10 border-2;
+            border-color: var(--primary-accent);
+            background: transparent;
         }
 
-        #webgl-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            outline: none;
+        .btn:hover {
+            background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+            border-color: transparent;
+        }
+        
+        #header {
+            background-color: rgba(10, 10, 10, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
-        .content-container {
-            position: relative;
-            z-index: 1;
+        .nav-link {
+            @apply px-4 py-2 text-gray-300 hover:text-white transition-colors duration-300 relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
             width: 100%;
-            padding: 0 5%;
         }
-
-        .section {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            max-width: 1100px;
-            margin: auto;
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.8rem;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--primary-accent);
+            border: 4px solid var(--dark-bg);
+            z-index: 1;
+        }
+        
+        /* Reveal on scroll animations */
+        .reveal {
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1s ease-out, transform 1s ease-out;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
 
-        .section.visible {
+        .reveal.visible {
             opacity: 1;
             transform: translateY(0);
         }
-
-        .project-card {
-            background-color: rgba(16, 16, 16, 0.7);
-            border: 1px solid #222;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        
-        .project-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: #777;
-        }
-        
-        .header {
-             background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
     </style>
 </head>
-<body>
+<body class="antialiased">
+    <div class="cursor"></div>
 
-    <div id="cursor-dot" class="custom-cursor"></div>
-    <div id="cursor-outline" class="custom-cursor"></div>
-    
-    <header class="header fixed top-0 left-0 right-0 z-50">
-        <div class="container mx-auto px-6 py-5 flex justify-between items-center">
-            <a href="#section-0" class="font-bold text-lg tracking-widest text-white">HRISHIKESH</a>
-            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-300">
-                <a href="#section-1" class="hover:text-white transition-colors">About</a>
-                <a href="#section-2" class="hover:text-white transition-colors">Projects</a>
-                <a href="#section-3" class="hover:text-white transition-colors">Contact</a>
+    <!-- Header -->
+    <header class="fixed w-full z-30 transition-all duration-300" id="header">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold gradient-text tracking-tighter">HM</a>
+            <nav class="hidden md:flex items-center space-x-4">
+                <a href="#about" class="nav-link">About</a>
+                <a href="#skills" class="nav-link">Skills</a>
+                <a href="#experience" class="nav-link">Experience</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#contact" class="nav-link">Contact</a>
             </nav>
+            <button id="mobile-menu-button" class="md:hidden text-2xl z-50">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden fixed inset-0 bg-black bg-opacity-90 flex flex-col items-center justify-center space-y-8">
+            <a href="#about" class="text-2xl text-gray-300 hover:gradient-text">About</a>
+            <a href="#skills" class="text-2xl text-gray-300 hover:gradient-text">Skills</a>
+            <a href="#experience" class="text-2xl text-gray-300 hover:gradient-text">Experience</a>
+            <a href="#projects" class="text-2xl text-gray-300 hover:gradient-text">Projects</a>
+            <a href="#contact" class="text-2xl text-gray-300 hover:gradient-text">Contact</a>
         </div>
     </header>
 
-    <canvas id="webgl-canvas"></canvas>
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="h-screen flex items-center justify-center text-center relative">
+            <div id="hero-canvas" class="absolute inset-0 z-0"></div>
+            <div class="container mx-auto px-6 z-10">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-4 leading-tight tracking-tighter reveal">
+                    Hi, I'm <span class="gradient-text">Hrishikesh Mishra</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto reveal" style="transition-delay: 200ms;">
+                    A Senior SDET crafting robust, scalable, and self-healing automation frameworks with a passion for quality and innovation.
+                </p>
+                <a href="#projects" class="btn text-lg reveal" style="transition-delay: 400ms;">View My Work</a>
+            </div>
+        </section>
 
-    <div class="content-container">
+        <!-- About Section -->
+        <section id="about" class="py-24 md:py-40">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div class="reveal">
+                        <h2 class="text-4xl md:text-5xl font-bold mb-6 tracking-tighter">A Fusion of <span class="gradient-text">Code & Quality</span></h2>
+                        <p class="text-lg text-gray-400 leading-relaxed mb-6">
+                            As an SDET, I see myself as more than just a tester; I'm an architect of quality. My journey over the last 3+ years has been a deep dive into building automation that isn't just functional, but intelligent and resilient.
+                        </p>
+                        <p class="text-lg text-gray-400 leading-relaxed">
+                            I'm driven by the challenge of complex problems, whether it's pioneering a self-healing framework with Generative AI or architecting robust CI/CD pipelines. My goal is always to create solutions that are not only effective but also elegant and sustainable.
+                        </p>
+                    </div>
+                    <div class="reveal" style="transition-delay: 200ms;">
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="text-2xl text-indigo-400 mr-4 mt-1"><i class="fas fa-rocket"></i></div>
+                                <div>
+                                    <h3 class="font-bold text-xl mb-1">Innovation-Driven</h3>
+                                    <p class="text-gray-400">Reduced test maintenance by 40% through a pioneering Generative AI self-healing framework.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="text-2xl text-pink-400 mr-4 mt-1"><i class="fas fa-layer-group"></i></div>
+                                <div>
+                                    <h3 class="font-bold text-xl mb-1">Full-Spectrum Automation</h3>
+                                    <p class="text-gray-400">Expertise in UI, Mobile, API, and Performance testing for comprehensive quality coverage.</p>
+                                </div>
+                            </div>
+                             <div class="flex items-start">
+                                <div class="text-2xl text-indigo-400 mr-4 mt-1"><i class="fas fa-cogs"></i></div>
+                                <div>
+                                    <h3 class="font-bold text-xl mb-1">DevOps Advocate</h3>
+                                    <p class="text-gray-400">Skilled in building and maintaining CI/CD pipelines for seamless, automated health checks.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-24 md:py-40 bg-black">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title gradient-text reveal">Core Competencies</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="card p-8 rounded-xl reveal"><h3 class="text-xl font-bold mb-4 text-white">Languages & Scripting</h3><div class="flex flex-wrap"><span class="tag">Java</span><span class="tag">Python</span><span class="tag">JavaScript</span><span class="tag">Node.js</span><span class="tag">SQL</span></div></div>
+                    <div class="card p-8 rounded-xl reveal" style="transition-delay: 100ms;"><h3 class="text-xl font-bold mb-4 text-white">Automation & Testing</h3><div class="flex flex-wrap"><span class="tag">Selenium WebDriver</span><span class="tag">WebDriverIO</span><span class="tag">Appium</span><span class="tag">TestNG</span><span class="tag">Rest Assured</span><span class="tag">Cucumber</span></div></div>
+                    <div class="card p-8 rounded-xl reveal" style="transition-delay: 200ms;"><h3 class="text-xl font-bold mb-4 text-white">API & Performance</h3><div class="flex flex-wrap"><span class="tag">JMeter</span><span class="tag">Postman</span><span class="tag">REST APIs</span><span class="tag">JSON/XML</span></div></div>
+                    <div class="card p-8 rounded-xl reveal" style="transition-delay: 300ms;"><h3 class="text-xl font-bold mb-4 text-white">DevOps & CI/CD</h3><div class="flex flex-wrap"><span class="tag">Bitbucket Pipelines</span><span class="tag">Git</span><span class="tag">Docker</span><span class="tag">Sauce Labs</span></div></div>
+                    <div class="card p-8 rounded-xl reveal" style="transition-delay: 400ms;"><h3 class="text-xl font-bold mb-4 text-white">Databases & Cloud</h3><div class="flex flex-wrap"><span class="tag">PostgreSQL</span><span class="tag">MySQL</span><span class="tag">Azure</span><span class="tag">Salesforce</span></div></div>
+                    <div class="card p-8 rounded-xl reveal" style="transition-delay: 500ms;"><h3 class="text-xl font-bold mb-4 text-white">Emerging Tech</h3><div class="flex flex-wrap"><span class="tag">Generative AI</span><span class="tag">LangChain4j</span><span class="tag">Machine Learning</span><span class="tag">Self-Healing Automation</span></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="py-24 md:py-40">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title gradient-text reveal">Career Journey</h2>
+                <div class="max-w-3xl mx-auto">
+                    <div class="relative border-l-2 border-dashed border-gray-700 ml-10">
+                        <div class="mb-16 ml-10 card p-8 rounded-xl relative timeline-item reveal">
+                            <h3 class="text-2xl font-bold text-white">Senior SDET</h3>
+                            <p class="text-lg text-indigo-400 mb-1">CloudKaptan Consultancy Services</p>
+                            <p class="text-sm text-gray-500 mb-4">2022 – Present</p>
+                            <ul class="list-disc list-inside text-gray-400 space-y-2">
+                                <li>Pioneered a Generative AI-powered self-healing framework, drastically cutting maintenance.</li>
+                                <li>Architected WebDriverIO and Appium frameworks for cross-platform mobile automation.</li>
+                                <li>Led automation for Salesforce and banking apps, slashing testing cycles by 60%.</li>
+                                <li>Masterminded CI/CD pipelines for automated daily health checks and reporting.</li>
+                            </ul>
+                        </div>
+                        <div class="mb-16 ml-10 card p-8 rounded-xl relative timeline-item reveal">
+                            <h3 class="text-2xl font-bold text-white">Software Engineering Intern</h3>
+                            <p class="text-lg text-indigo-400 mb-1">Persistent Systems</p>
+                            <p class="text-sm text-gray-500 mb-4">May 2022 - Aug 2022</p>
+                            <ul class="list-disc list-inside text-gray-400 space-y-2">
+                                <li>Contributed to full-stack development using the MERN stack (React, Express.js, Node.js).</li>
+                                <li>Developed and optimized RESTful APIs, improving data flow and application performance.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         
-        <section class="section" id="section-0">
-            <h1 class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-tight">
-                Engineering Quality. <br> Architecting Data.
-            </h1>
-            <p class="text-xl md:text-2xl text-gray-400 mt-6 max-w-3xl">
-                A creative technologist specializing in the intersection of robust test automation and scalable data engineering.
-            </p>
-        </section>
-
-        <section class="section" id="section-1">
-            <div class="grid md:grid-cols-2 gap-16 items-center">
-                <div>
-                    <h2 class="text-4xl md:text-6xl font-black tracking-tighter leading-tight">About Me</h2>
-                    <p class="mt-6 text-lg text-gray-400 leading-relaxed">
-                        With over 3 years of experience, I bridge the gap between software quality and data infrastructure. My passion is building elegant, high-performance solutions, from developing self-healing automation frameworks with AI to designing data pipelines that process terabytes of data in real-time.
-                    </p>
-                </div>
-                <div class="flex justify-center">
-                     <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf/AABEIAyAEsAMBIgACEQEDEQH/xAGiAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgsQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1VWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/AP0TooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKACigAooAKKAC-
-" alt="Hrishikesh Mishra" class="rounded-full shadow-lg w-48 h-48 md:w-64 md:h-64 object-cover">
+        <!-- Projects Section -->
+        <section id="projects" class="py-24 md:py-40 bg-black">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title gradient-text reveal">Featured Projects</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="card p-8 rounded-xl flex flex-col group reveal">
+                        <h3 class="text-2xl font-bold text-white mb-2">Self-Healing Utility Tool</h3>
+                        <p class="text-gray-400 flex-grow mb-4">A groundbreaking Java Selenium plugin that uses Generative AI to dynamically adapt to UI changes, making test scripts resilient and maintenance-free.</p>
+                        <div class="flex flex-wrap"><span class="tag">Java</span><span class="tag">Selenium</span><span class="tag">Generative AI</span></div>
+                    </div>
+                    <div class="card p-8 rounded-xl flex flex-col group reveal" style="transition-delay: 200ms;">
+                        <h3 class="text-2xl font-bold text-white mb-2">Keeper AI | Task Management</h3>
+                        <p class="text-gray-400 flex-grow mb-4">A full-stack task management app with offline AI summarization capabilities. Built with React, Node.js, and PostgreSQL.</p>
+                        <div class="flex flex-wrap"><span class="tag">React.js</span><span class="tag">Node.js</span><span class="tag">PostgreSQL</span><span class="tag">AI</span></div>
+                    </div>
+                    <div class="card p-8 rounded-xl flex flex-col group reveal" style="transition-delay: 400ms;">
+                        <h3 class="text-2xl font-bold text-white mb-2">Heart Disease Prediction App</h3>
+                        <p class="text-gray-400 flex-grow mb-4">A machine learning model deployed on Streamlit that predicts heart disease with 92% accuracy, using Logistic Regression and Random Forest.</p>
+                        <div class="flex flex-wrap"><span class="tag">Python</span><span class="tag">Machine Learning</span><span class="tag">Streamlit</span></div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="section" id="section-2">
-            <h2 class="text-4xl md:text-6xl font-black tracking-tighter text-center">Featured Projects</h2>
-             <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
-                <a href="#" class="project-card p-8 rounded-lg block">
-                     <h3 class="text-2xl font-bold">Real-Time Sales Analytics</h3>
-                     <p class="text-gray-400 mt-3">A Kafka & Azure Databricks pipeline processing over 1M daily records, reducing reporting latency from hours to seconds.</p>
-                     <div class="mt-4 flex flex-wrap gap-2">
-                         <span class="text-xs font-semibold bg-blue-900/50 text-blue-300 py-1 px-3 rounded-full">Kafka</span>
-                         <span class="text-xs font-semibold bg-blue-900/50 text-blue-300 py-1 px-3 rounded-full">Azure</span>
-                     </div>
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 md:py-40">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="section-title gradient-text reveal">Let's Connect</h2>
+                <p class="max-w-2xl mx-auto text-lg text-gray-400 mb-10 reveal" style="transition-delay: 200ms;">
+                    I'm always open to discussing new projects, creative ideas, or opportunities to be part of an ambitious team.
+                </p>
+                <a href="mailto:hrishikeshmishra984@gmail.com" class="btn text-xl reveal" style="transition-delay: 400ms;">
+                    Say Hello <i class="fas fa-arrow-right ml-2"></i>
                 </a>
-                <a href="#" class="project-card p-8 rounded-lg block">
-                     <h3 class="text-2xl font-bold">Self-Healing Automation</h3>
-                     <p class="text-gray-400 mt-3">A Generative AI plugin for Selenium that adapts to UI changes, drastically reducing test maintenance effort.</p>
-                     <div class="mt-4 flex flex-wrap gap-2">
-                         <span class="text-xs font-semibold bg-purple-900/50 text-purple-300 py-1 px-3 rounded-full">GenAI</span>
-                         <span class="text-xs font-semibold bg-purple-900/50 text-purple-300 py-1 px-3 rounded-full">Selenium</span>
-                     </div>
-                </a>
-                <a href="#" class="project-card p-8 rounded-lg block">
-                     <h3 class="text-2xl font-bold">Data Lake Optimization</h3>
-                     <p class="text-gray-400 mt-3">Architected a performant Azure data lake using Parquet/Avro, boosting query speeds by 40%.</p>
-                      <div class="mt-4 flex flex-wrap gap-2">
-                         <span class="text-xs font-semibold bg-green-900/50 text-green-300 py-1 px-3 rounded-full">Azure</span>
-                         <span class="text-xs font-semibold bg-green-900/50 text-green-300 py-1 px-3 rounded-full">Big Data</span>
-                     </div>
-                </a>
-                <a href="#" class="project-card p-8 rounded-lg block">
-                     <h3 class="text-2xl font-bold">Keeper AI Task Manager</h3>
-                     <p class="text-gray-400 mt-3">A full-stack app with offline AI summarization using React, Node.js, and PostgreSQL.</p>
-                     <div class="mt-4 flex flex-wrap gap-2">
-                         <span class="text-xs font-semibold bg-red-900/50 text-red-300 py-1 px-3 rounded-full">React</span>
-                         <span class="text-xs font-semibold bg-red-900/50 text-red-300 py-1 px-3 rounded-full">Node.js</span>
-                     </div>
-                </a>
-             </div>
-        </section>
-
-         <section class="section text-center" id="section-3">
-             <h2 class="text-5xl md:text-7xl font-black tracking-tighter">Get in Touch</h2>
-             <p class="mt-4 text-xl text-gray-400">Let's build something amazing together.</p>
-             <a href="mailto:hrishikeshmishra984@gmail.com" class="inline-block mt-8 bg-white text-black text-lg font-bold px-10 py-5 rounded-full hover:bg-gray-200 transition-colors">
-                 CONTACT ME
-             </a>
-             <div class="flex justify-center space-x-10 mt-12 text-lg">
-                 <a href="https://www.linkedin.com/in/hrishikesh-mishra" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition-colors">LINKEDIN</a>
-                 <a href="#" class="text-gray-400 hover:text-white transition-colors">GITHUB</a>
+                <div class="flex justify-center space-x-8 mt-16 reveal" style="transition-delay: 600ms;">
+                    <a href="https://www.linkedin.com/in/hrishikesh-mishra" target="_blank" class="text-3xl text-gray-400 hover:text-indigo-500 transition-transform duration-300 hover:scale-110">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                     <a href="https://github.com/hrishikesh-mishra" target="_blank" class="text-3xl text-gray-400 hover:text-indigo-500 transition-transform duration-300 hover:scale-110">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
             </div>
-         </section>
+        </section>
+    </main>
 
-    </div>
+    <footer class="py-8">
+        <div class="container mx-auto px-6 text-center text-gray-600">
+            <p>Designed & Built by Hrishikesh Mishra &copy; 2024</p>
+        </div>
+    </footer>
 
     <script>
-        // Ensure Three.js is loaded
-        if (typeof THREE === 'undefined') {
-            console.error('Three.js has not been loaded. Check the script URL.');
-        } else {
-            let camera, scene, renderer;
-            let particles, material;
-            let mouseX = 0, mouseY = 0;
-            let scrollY = 0;
-            const cameraPositions = [
-                { z: 1000 }, // Section 0
-                { z: 200 },  // Section 1
-                { z: -600 }, // Section 2
-                { z: -1400 } // Section 3
-            ];
+        document.addEventListener('DOMContentLoaded', () => {
 
-            const sections = document.querySelectorAll('.section');
-            const cursorDot = document.getElementById('cursor-dot');
-            const cursorOutline = document.getElementById('cursor-outline');
+            // Custom Cursor
+            const cursor = document.querySelector('.cursor');
+            window.addEventListener('mousemove', e => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            
+            document.querySelectorAll('a, button, .card').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('cursor-grow'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-grow'));
+            });
+
+            // Mobile Menu
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIcon = mobileMenuButton.querySelector('i');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                menuIcon.classList.toggle('fa-bars');
+                menuIcon.classList.toggle('fa-times');
+            });
+             document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    menuIcon.classList.remove('fa-times');
+                    menuIcon.classList.add('fa-bars');
+                });
+            });
+
+            // Reveal on Scroll
+            const revealElements = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            revealElements.forEach(el => {
+                observer.observe(el);
+            });
+
+            // Three.js Hero Animation
+            let scene, camera, renderer, shape;
+            const container = document.getElementById('hero-canvas');
 
             function init() {
-                // Setup Camera
-                camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 3000);
-                camera.position.z = cameraPositions[0].z;
-
-                // Setup Scene
                 scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+                camera.position.z = 5;
 
-                // Setup Renderer
-                renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('webgl-canvas'), antialias: true, alpha: true });
-                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setSize(container.clientWidth, container.clientHeight);
                 renderer.setPixelRatio(window.devicePixelRatio);
+                container.appendChild(renderer.domElement);
 
-                // Create Particles
-                const particleCount = 8000;
-                const positions = new Float32Array(particleCount * 3);
-                const colors = new Float32Array(particleCount * 3);
-                const sdetColor = new THREE.Color(0x3b82f6);
-                const dataColor = new THREE.Color(0xec4899);
-
-                for (let i = 0; i < particleCount; i++) {
-                    const i3 = i * 3;
-                    positions[i3] = (Math.random() - 0.5) * 2500;
-                    positions[i3 + 1] = (Math.random() - 0.5) * 2500;
-                    positions[i3 + 2] = (Math.random() - 0.5) * 2500;
-                    
-                    const mixedColor = sdetColor.clone().lerp(dataColor, Math.random());
-                    colors[i3] = mixedColor.r;
-                    colors[i3 + 1] = mixedColor.g;
-                    colors[i3 + 2] = mixedColor.b;
-                }
-
-                const geometry = new THREE.BufferGeometry();
-                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-                material = new THREE.PointsMaterial({
-                    size: 2.0,
-                    vertexColors: true,
-                    sizeAttenuation: true,
-                    transparent: true,
-                    opacity: 0.9
+                const geometry = new THREE.IcosahedronGeometry(2, 1);
+                const material = new THREE.MeshStandardMaterial({
+                    color: 0x6366F1,
+                    metalness: 0.1,
+                    roughness: 0.3,
+                    wireframe: true,
                 });
 
-                particles = new THREE.Points(geometry, material);
-                scene.add(particles);
+                shape = new THREE.Mesh(geometry, material);
+                scene.add(shape);
 
-                // Event Listeners
-                window.addEventListener('resize', onWindowResize);
-                window.addEventListener('scroll', onScroll);
-                document.addEventListener('mousemove', onMouseMove);
+                const pointLight1 = new THREE.PointLight(0x6366F1, 2);
+                pointLight1.position.set(10, 10, 10);
+                scene.add(pointLight1);
                 
-                // Cursor hover effects
-                document.querySelectorAll('a, button').forEach(el => {
-                    el.addEventListener('mouseenter', () => document.body.classList.add('hovered'));
-                    el.addEventListener('mouseleave', () => document.body.classList.remove('hovered'));
-                });
+                const pointLight2 = new THREE.PointLight(0xEC4899, 2);
+                pointLight2.position.set(-10, -10, 5);
+                scene.add(pointLight2);
 
-                // Intersection Observer for sections
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                        } else {
-                           entry.target.classList.remove('visible');
-                        }
-                    });
-                }, { threshold: 0.5 }); // Trigger when 50% of the section is visible
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+                scene.add(ambientLight);
 
-                sections.forEach(section => observer.observe(section));
+                animate();
             }
 
-            function onWindowResize() {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            }
-
-            function onMouseMove(event) {
-                mouseX = event.clientX - window.innerWidth / 2;
-                mouseY = event.clientY - window.innerHeight / 2;
-                
-                cursorDot.style.transform = `translate(${event.clientX}px, ${event.clientY}px)`;
-                cursorOutline.style.transform = `translate(${event.clientX - 20}px, ${event.clientY - 20}px)`;
-            }
-            
-            function onScroll() {
-                scrollY = window.scrollY;
-            }
-            
-            const lerp = (a, b, t) => a * (1 - t) + b * t;
+            let mouseX = 0, mouseY = 0;
+            document.addEventListener('mousemove', (event) => {
+                mouseX = (event.clientX - window.innerWidth / 2) / 100;
+                mouseY = (event.clientY - window.innerHeight / 2) / 100;
+            });
 
             function animate() {
                 requestAnimationFrame(animate);
-
-                // Determine current and next section index based on scroll
-                const scrollRatio = scrollY / (document.body.scrollHeight - window.innerHeight);
-                const sectionIndexFloat = scrollRatio * (cameraPositions.length - 1);
-                const currentSectionIndex = Math.floor(sectionIndexFloat);
-                const nextSectionIndex = Math.min(currentSectionIndex + 1, cameraPositions.length - 1);
-                const sectionScrollRatio = sectionIndexFloat - currentSectionIndex;
-
-                // Interpolate camera Z position for smooth transition
-                const targetZ = lerp(
-                    cameraPositions[currentSectionIndex].z, 
-                    cameraPositions[nextSectionIndex].z, 
-                    sectionScrollRatio
-                );
                 
-                camera.position.z = lerp(camera.position.z, targetZ, 0.07);
-
-                // Mouse move effect on camera
-                camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.05;
-                camera.position.y += (-mouseY * 0.5 - camera.position.y) * 0.05;
-                camera.lookAt(scene.position);
-                
-                // Animate particles
-                particles.rotation.y += 0.0002;
-                particles.rotation.x += 0.0001;
+                if (shape) {
+                    shape.rotation.x += 0.001;
+                    shape.rotation.y += 0.001;
+                    
+                    camera.position.x += (mouseX - camera.position.x) * 0.05;
+                    camera.position.y += (-mouseY - camera.position.y) * 0.05;
+                    camera.lookAt(scene.position);
+                }
 
                 renderer.render(scene, camera);
             }
 
+            function onWindowResize() {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            }
+
+            window.addEventListener('resize', onWindowResize);
+
             init();
-            animate();
-        }
+        });
     </script>
 </body>
 </html>
+
+
